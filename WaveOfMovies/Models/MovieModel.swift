@@ -10,10 +10,10 @@ import Foundation
 
 struct Media : Codable {
     let page : Int
-    let results : [Product]
+    let results : [Results]
 }
 
-struct Product : Codable {
+struct Results : Codable {
     let id : Int
     var title : String?
     let name: String?
@@ -23,6 +23,7 @@ struct Product : Codable {
     let releaseDate : String?
     let firstAirDate: String?
     let rating: Double
+    let mediaType: String
     
     var currentName: String {
         title ?? name ?? ""
@@ -41,8 +42,13 @@ struct Product : Codable {
         case releaseDate = "release_date"
         case firstAirDate = "first_air_date"
         case rating = "vote_average"
+        case mediaType = "media_type"
     }
 }
+
+
+
+
 //MARK: Model fo Genres
 struct Genres: Codable {
     let id: Int
