@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class UserDefaultsManeger {
+final class UserDefaultsManager {
     
     private let defaults = UserDefaults.standard
     private let key = "CachingMedia"

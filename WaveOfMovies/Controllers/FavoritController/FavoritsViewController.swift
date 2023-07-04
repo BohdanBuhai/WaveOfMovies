@@ -10,13 +10,17 @@ import UIKit
 class FavoritsViewController: UIViewController {
 
     let tableView = UITableView()
-    let userDefaults = UserDefaultsManeger()
+    let userDefaults = UserDefaultsManager()
     var data: [Results] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         loadData()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+        print("viewWillAppear")
     }
     
     private func loadData() {
@@ -32,6 +36,7 @@ class FavoritsViewController: UIViewController {
     
     private func setupTableView() {
         tableView.dataSource = self
+        tableView.delegate = self
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -64,7 +69,18 @@ extension FavoritsViewController: UITableViewDataSource {
         
         return myCell
     }
-    
-    
+}
 
+extension FavoritsViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let ditailsVc = storyboard?.instantiateViewController(withIdentifier: "DatailsViewController") as? DatailsViewController
+        else {return}
+        let selectedMedia = data[indexPath.item]
+//        ditailsVc.genres = genresCollection
+        ditailsVc.media = selectedMedia
+        
+        navigationController?.pushViewController(ditailsVc, animated: true)
+    }
+    
 }

@@ -19,11 +19,11 @@ struct Results : Codable {
     let name: String?
     let overview : String
     var posterPath : String
-    let genreIds : [Int]
+    let genreIds : [Int]?
     let releaseDate : String?
     let firstAirDate: String?
-    let rating: Double
-    let mediaType: String
+    let rating: Double?
+    let mediaType: String?
     
     var currentName: String {
         title ?? name ?? ""
@@ -46,7 +46,14 @@ struct Results : Codable {
     }
 }
 
-
+    //MARK: Model fo trailer
+struct Trailer: Codable {
+    let results: [Video]
+}
+struct Video: Codable {
+    let key: String
+    let type: String
+}
 
 
 //MARK: Model fo Genres

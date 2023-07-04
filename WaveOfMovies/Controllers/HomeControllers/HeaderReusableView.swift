@@ -9,9 +9,5 @@ import UIKit
 
 class HeaderReusableView: UICollectionReusableView {
     
-    
     @IBOutlet weak var nameSectioLabel: UILabel!
-    
-    
-    
 }

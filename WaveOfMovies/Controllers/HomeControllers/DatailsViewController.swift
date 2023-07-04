@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import YouTubeiOSPlayerHelper
 
 class DatailsViewController: UIViewController {
     
-    let networkManeger = NetworkManeger()
+    let networkManager = NetworkManager()
     
     // MARK: Views
     @IBOutlet weak var backgroundPosterImag: UIImageView!
@@ -20,16 +21,38 @@ class DatailsViewController: UIViewController {
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet var starImagCollection: [UIImageView]!
     @IBOutlet weak var overViewLabel: UILabel!
-    @IBOutlet weak var playerView: UIView!
+    @IBOutlet weak var playerView: YTPlayerView!
     
     var media: Results?
     var genres: [Genres]?
+    var video: [Video] = []
     
     //MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataFilling()
         
+        dataFilling()
+        setTrailer()
+    }
+    
+    private func dataFilling() {
+        guard let media = media,
+              let genres = media.genreIds else {
+            return
+        }
+        creatPosterImage(from: media.posterPath ) { [weak self] image in
+            self?.backgroundPosterImag.image = image
+        }
+        creatPosterImage(from: media.posterPath) { [weak self] image in
+            self?.currentPosterImage.image = image
+        }
+        mediaNameLabel.text = media.title ?? media.name
+        overViewLabel.text = media.overview
+        releaseDataLabel.text = media.releaseDate ?? media.firstAirDate
+        let genresString = transformationGenreToString(from: genres )
+        genresLabel.text = genresString.joined(separator: " | ")
+        ratingLabel.text = String(describing: media.rating )
+        setingStarsImage()
     }
     
     private func transformationGenreToString(from genresId: [Int]) -> [String] {
@@ -44,24 +67,44 @@ class DatailsViewController: UIViewController {
         return genresDescription
     }
     
-    
-    private func dataFilling() {
+    private func creatPosterImage(from poster: String, comletion: @escaping((UIImage?) -> Void)) {
         
-        creatPosterImage(from: media?.posterPath ?? "") { [weak self] image in
-            self?.backgroundPosterImag.image = image
-        }
-        creatPosterImage(from: media?.posterPath ?? "") { [weak self] image in
-            self?.currentPosterImage.image = image
-        }
-        mediaNameLabel.text = media?.title ?? media?.name
-        overViewLabel.text = media?.overview
-        releaseDataLabel.text = media?.releaseDate ?? media?.firstAirDate
-       let genresString = transformationGenreToString(from: media?.genreIds ?? [])
-        genresLabel.text = genresString.joined(separator: " | ")
-        ratingLabel.text = String(describing: media?.rating ?? 0)
-        setingStarsImage()
+        let api = "https://image.tmdb.org/t/p/w154\(poster)"
+        guard let url = URL(string: api) else {return}
+        networkManager.session.dataTask(with: url) { data, _, _ in
+            guard let data = data else {
+                comletion(nil)
+                return
+            }
+            DispatchQueue.main.async {
+                comletion(UIImage(data: data))
+            }
+        }.resume()
     }
     
+    private func setTrailer() {
+        loadTrailers { [weak playerView] key in
+            playerView?.load(withVideoId: key)
+        }
+    }
+    
+    private func loadTrailers(completion: ((String) -> Void)?) {
+        Task.init {
+            do {
+                guard let id = media?.id else {
+                    return
+                }
+                video = try await networkManager.loadVideo(from: String(id))
+                var key = ""
+                let video = video.first {$0.type == "Trailer"}
+                key = video?.key ?? ""
+                completion?(key)
+            } catch {
+                print(error)
+            }
+        }
+    }
+   
     //MARK: Set star image
     private func setingStarsImage() {
         switch media?.rating ?? 0.0 {
@@ -101,23 +144,4 @@ class DatailsViewController: UIViewController {
             break
         }
     }
-    
-    //@escaping
-    
-    private func creatPosterImage(from poster: String, clouger: ((UIImage?) -> Void)?) {
-        
-        let api = "https://image.tmdb.org/t/p/w154\(poster)"
-        let url = URL(string: api)!
-        networkManeger.session.dataTask(with: url) { data, _, _ in
-            guard let data = data else {
-                clouger?(nil)
-                return
-            }
-            DispatchQueue.main.async {
-                clouger?(UIImage(data: data))
-            }
-        }.resume()
-        
-    }
-
 }

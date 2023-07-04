@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wZo-EK-ax1">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -165,7 +166,7 @@
                         <barButtonItem key="rightBarButtonItem" image="magnifyingglass" catalog="system" id="cax-fn-rJz">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <segue destination="Q08-oX-gJ5" kind="show" id="u6H-ZI-Um4"/>
+                                <action selector="searchButtonPressed:" destination="BYZ-38-t0r" id="rKS-Dx-uqq"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -181,7 +182,7 @@
         <!--Search View Controller-->
         <scene sceneID="CmI-IJ-lol">
             <objects>
-                <viewController id="Q08-oX-gJ5" customClass="SearchViewController" customModule="WaveOfMovies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchViewController" id="Q08-oX-gJ5" customClass="SearchViewController" customModule="WaveOfMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KV9-zT-yfD">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -197,7 +198,7 @@
         <!--Ditaills-->
         <scene sceneID="W9k-ac-C1b">
             <objects>
-                <viewController storyboardIdentifier="MoreDatailsViewController" id="owy-lf-Vwo" customClass="DatailsViewController" customModule="WaveOfMovies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DatailsViewController" id="owy-lf-Vwo" customClass="DatailsViewController" customModule="WaveOfMovies" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4hQ-iw-vPc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -206,9 +207,9 @@
                                 <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                                 <subviews>
                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="j8p-Uh-rSX">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="904.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="904.33333333333348"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.65000000000000002" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OAT-J2-ye8">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.65000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OAT-J2-ye8">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="262"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="262" id="if3-P7-fSk"/>
@@ -292,7 +293,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WhP-hI-5Cw">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WhP-hI-5Cw" customClass="YTPlayerView">
                                                 <rect key="frame" x="8" y="688.33333333333337" width="377" height="216"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
@@ -356,7 +357,7 @@
                         <outlet property="genresLabel" destination="gpR-V5-JcJ" id="gi3-NJ-jtp"/>
                         <outlet property="mediaNameLabel" destination="jJl-Bn-JYU" id="Ogz-D8-LOD"/>
                         <outlet property="overViewLabel" destination="nTu-xR-mS6" id="ZfT-pG-B5T"/>
-                        <outlet property="playerView" destination="WhP-hI-5Cw" id="bVp-gn-cZJ"/>
+                        <outlet property="playerView" destination="WhP-hI-5Cw" id="5Wh-g3-qDn"/>
                         <outlet property="ratingLabel" destination="U99-xZ-czC" id="clR-D5-yAB"/>
                         <outlet property="releaseDataLabel" destination="cYq-Ai-orQ" id="Tbb-o7-MXW"/>
                         <outletCollection property="starImagCollection" destination="Baq-5h-jdY" collectionClass="NSMutableArray" id="T1n-Bi-eoF"/>

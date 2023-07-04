@@ -15,23 +15,11 @@ class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var releaseDateLabel: UILabel!
     @IBOutlet weak var fevoritButton: UIButton!
     
-    var media: Results = .init(id: 0,
-                               name: "",
-                               overview: "",
-                               posterPath: "",
-                               genreIds: [],
-                               releaseDate: "",
-                               firstAirDate: "",
-                               rating: 0,
-                               mediaType: "") {
-        didSet {
-           seting()
-        }
-    }
-    var isFavorit: Bool = false
-    let networkManeger = NetworkManeger()
-    let userDefeults = UserDefaultsManeger()
+
+    var didFavore: ((Bool) -> ())?
     
+    var isFavorit: Bool = false
+  
     override func prepareForReuse() {
         super.prepareForReuse()
         posterImage.image = nil
@@ -39,20 +27,22 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     @IBAction func favoritButtonTup(_ sender: UIButton) {
+        
         if isFavorit == false {
-            userDefeults.saveInUD(media: [media])
-            fevoritButton.setImage(UIImage(named: "heartfill"), for: .normal)
-            isFavorit = true
-        } else {
+            didFavore?(isFavorit == false)
             
+            fevoritButton.setImage(UIImage(named: "heartfill"), for: .normal)
+           isFavorit = true
+        } else {
+            didFavore?(isFavorit == false)
             fevoritButton.setImage(UIImage(named: "heart"), for: .normal)
             isFavorit = false
         }
     
     }
     
-    private func seting() {
-        fevoritButton.setImage(UIImage(named: "heart"), for: .normal)
+     func configure(with media: Results) {
+
         titleLabel.text = " \(media.currentName)"
         releaseDateLabel.text = media.currentReleaseData
         loadImag(posterPath: media.posterPath)
@@ -61,8 +51,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
 // MARK: load poster
     func loadImag(posterPath: String) {
         let api = "https://image.tmdb.org/t/p/w154\(posterPath)"
-        let url = URL(string: api)!
-        DispatchQueue.global().async {[weak self] in
+        guard let url = URL(string: api) else {return}
+        DispatchQueue.main.async {[weak self] in
             guard let self = self else {return}
             URLSession.shared.dataTask(with: url) {data,_,_ in
                 guard let data = data else {return}
@@ -75,7 +65,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
      func definitionGenreName(from genres: [Genres], product: Results) {
         for genre in genres {
-            if genre.id == product.genreIds.first ?? 0 {
+            if genre.id == product.genreIds?.first ?? 0 {
                 genreLabel.text = " \(genre.name)"
             }
         }
