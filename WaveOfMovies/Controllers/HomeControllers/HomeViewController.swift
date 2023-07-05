@@ -174,7 +174,7 @@ extension HomeViewController: UICollectionViewDataSourcePrefetching {
         
         let indicces = indexPaths.map { $0.row }
         let pageMovie = arrayMovie.count
-        if indicces[1] == 15 {
+        if indicces[1] == arrayMovie[0].results.count - 5 {
             if segmentController.selectedSegmentIndex == 0 && pageMovie < 5 {
                 Task.init {
                     let media = try await networkManager.loadMediaData(from: movie,
